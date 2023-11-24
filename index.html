@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Puja Kerang Ajaib</title>
+    <style>
+        body {
+            font-family: Montserrat;
+            font-weight: bold;
+            background-image: url('background.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            padding: 20px;
+            font-size: large;
+            color: #fbe830;
+            text-align: center;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            color: #fbe830;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            font-weight: bold;
+        }
+        h3 {
+            color: #192655;
+            font-weight: bold;
+        }
+        section {
+            max-width: 400px;
+            margin: 0 150px ;
+            padding: 20px;
+            background-color: #a1d4df;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+            background-color: ;
+            text-align: center;
+        }
+
+        button {
+            background-color: #1450A3;
+            color: white;
+            padding: 10px;
+            margin-top: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #192655;
+        }
+
+        label {
+            display: block;
+            margin: 10px 0;
+        }
+
+        input {
+            font-family: Montserrat;
+            border-radius: 10px;
+            border:2px solid #192655;
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            background-color: aliceblue;
+        }
+
+        p {
+            font-size: large;
+            margin-top: 10px;
+            color: #192655;
+        }
+
+        #pesan-container {
+            display: none;
+        }
+
+        #pesan {
+            margin-top: 10px;
+        }
+
+        #btn-pesan, #btn-pesan-nama {
+            background-color: #1450A3;
+            color: white;
+            font-weight: bold;
+            padding: 10px 20px;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+        #pesan-hari-ini-container {
+            display: none;
+            margin-top: 20px;
+        }
+
+        #pesan-hari-ini {
+            font-size: medium;
+            color: #192655;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Selamat Datang di Puja Kerang Ajaib!</h1>
+    </header>
+
+    <section>
+        <p>Siapa namamu?</p>
+        <input type="text" id="nama" placeholder="Masukkan nama">
+
+        <button onclick="tampilkanPesanAwal()">Let's go</button>
+
+        <div id="pesan-container">
+            <h3 id="pesan"></h3>
+            <div id="pesan-hari-ini-container">
+                <h2>Pesan Hari Ini:</h2>
+                <h3 id="pesan-hari-ini"></h3>
+            </div>
+            <button id="btn-pesan" onclick="dapatkanPesan()">Dapatkan pesan hari ini</button>
+            <button id="btn-pesan-nama" onclick="dapatkanPesanDenganNama()">Dapatkan pesan hari ini dengan nama</button>
+        </div>
+    </section>
+
+    <script>
+        function tampilkanPesanAwal() {
+            var nama = document.getElementById('nama').value;
+            if (nama) {
+                fetch('/puja-kerang-ajaib', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: 'nama=' + encodeURIComponent(nama),
+,
+                })
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('pesan').innerText = data.pesan;
+                    document.getElementById('pesan-hari-ini-container').style.display = 'none';
+                    document.getElementById('pesan-container').style.display = 'block';
+                });
+            } else {
+                alert('Silakan masukkan nama Anda.');
+            }
+        }
+
+        function dapatkanPesan() {
+            fetch('/puja-kerang-ajaib')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('pesan-hari-ini').innerText = data.pesan;
+                    document.getElementById('pesan-hari-ini-container').style.display = 'block';
+                });
+        }
+
+        function dapatkanPesanDenganNama() {
+            var nama = document.getElementById('nama').value;
+            if (nama) {
+                fetch('/puja-kerang-ajaib?nama=' + encodeURIComponent(nama), {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+  
+                })
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('pesan-hari-ini').innerText = data.pesan;
+                    document.getElementById('pesan-hari-ini-container').style.display = 'block';
+                });
+            } else {
+                alert('Silakan masukkan nama Anda.');
+            }
+        }
+    </script>
+</body>
+</html>
